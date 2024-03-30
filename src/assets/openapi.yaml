@@ -1,0 +1,320 @@
+openapi: 3.0.3
+info:
+  title: Role Editor API - OpenAPI 3.0
+  description: A reference-app(REST) to edit user roles
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    name: V3nom09_Sentinel
+    email: sen.soumyabrata09@yahoo.com
+  license:
+    name: MIT License
+    url: "https://choosealicense.com/licenses/mit/"
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: "http://swagger.io"
+servers:
+  - url: "http://localhost:8081/api/v1/"
+tags:
+  - name: Role CRUD Operations
+    description: User Role editor APIs
+    externalDocs:
+      description: Find out more
+      url: "http://swagger.io"
+  - name: Users CRUD Operations
+    description: User editor APIs
+    externalDocs:
+      description: Find out more about our store
+      url: "http://swagger.io"
+paths:
+  "/role":
+    put:
+      tags:
+        - Update Role
+      summary: Update an existing User role
+      description: Update an existing user role
+      operationId: updateRole
+      requestBody:
+        description: Update an existing user role
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Role"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleDto"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/RoleDto"
+        "400":
+          description: Bad Request
+        "404":
+          description: Id not found
+    post:
+      tags:
+        - Create Role
+      summary: Creates an user
+      description: Create an user
+      operationId: createRole
+      requestBody:
+        description: Create an user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Role"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleDto"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/RoleDto"
+        "400":
+          description: Bad Request
+    get:
+      tags:
+        - Get All Roles
+      summary: Get all the availale user roles
+      description: Get all the availale user roles
+      operationId: getRoles
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoleDto"
+        "400":
+          description: Bad Request
+  "/role/{roleId}":
+    get:
+      tags:
+        - Get Role by Id
+      summary: Finds user role by given identifier
+      description: Finds user role by given identifier & returns a single Role Object
+      operationId: getRoleById
+      parameters:
+        - name: roleId
+          in: path
+          description: user role identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleDto"
+        "400":
+          description: Bad Request
+        "404":
+          description: Id not found
+    delete:
+      tags:
+        - Delete Role
+      summary: Deletes user role by id
+      description: deletes user role by identifier
+      operationId: deleteRole
+      parameters:
+        - name: roleId
+          in: path
+          description: role id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid role id
+        "204":
+          description: No Content
+  "/user":
+    post:
+      tags:
+        - Create User
+      summary: Create user
+      description: ceates user
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "400":
+          description: Bad Request
+        "404":
+          description: Id not found
+    put:
+      tags:
+        - Update User
+      summary: Update user
+      description: updates user
+      operationId: updateUser
+      requestBody:
+        description: Updates user object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "400":
+          description: Bad Request
+        "404":
+          description: Id not found
+    get:
+      tags:
+        - Get all User
+      summary: get all the available users
+      description: get all the available users
+      operationId: getUsers
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserDto"
+        "400":
+          description: Bad Request
+        "404":
+          description: Id not found
+  "/user/{userId}":
+    get:
+      tags:
+        - Get user by Id
+      summary: Get user by user name
+      description: Retrieves the user detail based on the given user id
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: User Identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "400":
+          description: Invalid user id supplied
+        "404":
+          description: User not found
+    delete:
+      tags:
+        - Delete User
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+        "204":
+          description: Not Content
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 104567
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        Role:
+          $ref: "#/components/schemas/Role"
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 104567
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        Role:
+          $ref: "#/components/schemas/RoleDto"
+    Role:
+      required:
+        - id
+        - Role identifier
+      type: object
+      properties:
+        id:
+          type: string
+          example: 101234
+        roleName:
+          type: string
+          example: Develop
+    RoleDto:
+      required:
+        - id
+        - Role identifier
+      type: object
+      properties:
+        id:
+          type: string
+          example: 101234
+        roleName:
+          type: string
+          example: UX Designer
+  requestBodies:
+    Role:
+      description: Role object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Role"
+    User:
+      description: User Objects
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"

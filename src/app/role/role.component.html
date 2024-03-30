@@ -2,15 +2,16 @@
     <caption hidden>This Table will list the available roles</caption>
     <thead class="table-info">
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name Role</th>
+            <th scope="col">ID</th>
+            <th scope="col">Role Name</th>
             <th scope="col" colspan="2">Action</th>
         </tr>
     </thead>
     <tbody class="table-group-divider">
+        @for (role of roleList; track $index) {
         <tr>
-            <th scope="row"></th>
-            <td>role-name: Senior Developer</td>
+            <th scope="row">{{ role.id }}</th>
+            <td>{{ role.roleName }}</td>
             <td>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#editRole"
                     (click)="openModal(role)">Edit</button>
@@ -19,22 +20,13 @@
                 <button type="button" class="btn btn-outline-danger btn-sm">Remove</button>
             </td>
         </tr>
-        <!--Dummy Rows will be removed-->
-        <tr>
-            <th scope="row"></th>
-            <td>role-name: UX Designer</td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger btn-sm">Remove</button>
-            </td>
-        </tr>
+        }
     </tbody>
 </table>
 
 <!--Modal-->
-<div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="modalCenteredTitle"
+<!-- <form [formGroup]="formGroup"> -->
+    <div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="modalCenteredTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -49,7 +41,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Role Name</span>
                     </div>
-                    <input type="text" class="form-control" value="Senior Developer">
+                    <input type="text" class="form-control" formControlName="role.roleName">
                 </div>
             </div>
             <div class="modal-footer">
@@ -60,6 +52,7 @@
         </div>
     </div>
 </div>
+<!-- </form> -->
 
 @if (showToaster) {
 <div class="toast-container position-fixed bottom-0 end-0 p-3">

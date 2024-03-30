@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 **Application Overview**
 
-![screenshot](src/assets/arch.png)
+![screenshot](src/assets/arch.jpeg)
 
 ***Backend Repository***: [role-editor-backend](https://github.com/soumyabrata09/role-editor-backend.git)
 

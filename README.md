@@ -2,6 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
 
+**Application Overview**
+
+![screenshot](src/assets/arch.png)
+
+***Backend Repository***: [role-editor-backend](https://github.com/soumyabrata09/role-editor-backend.git)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:3003/`. The application will automatically reload if you change any of the source files.

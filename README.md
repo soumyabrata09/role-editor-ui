@@ -29,10 +29,21 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
  Execute `npm run generate`
 
+***Code generation command***:
+```
+ng-openapi-gen --input src/assets/openapi.yaml --output src/app/lib/generated
+ ```
+
 > This command will generate all the contracts from openapi specification, includin api and services
 
 Execute `npm run generate:model`
 > This Command will generate all the openapi specifications and then will only keep the models
+
+> Custom Js file: delete-generated-files.js
+
+**Following Dependencies added**
+ - "ng-openapi-gen": "^0.51.0",
+ - "rimraf": "^5.0.5",
 
 ## Further help
 

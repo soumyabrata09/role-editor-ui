@@ -1,0 +1,14 @@
+import { Injectable } from '@angular/core';
+import { CreateRoleService, DeleteRoleService, GetAllRolesService, GetRoleByIdService, UpdateRoleService } from '../lib/generated/services';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RoleService {
+
+  constructor(readonly createRoleService: CreateRoleService,
+    readonly getAllRoleService: GetAllRolesService,
+    readonly updateRoleService: UpdateRoleService,
+    readonly getRoleByIdService: GetRoleByIdService,
+    readonly deleteRoleService: DeleteRoleService) { }
+}

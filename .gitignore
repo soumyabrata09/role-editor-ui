@@ -43,3 +43,4 @@ Thumbs.db
 
 package-lock.json
 src/app/lib/generated
+!src/app/lib

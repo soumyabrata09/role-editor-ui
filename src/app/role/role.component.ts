@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Role, RoleDto } from '../lib/generated/models';
 import { RoleService } from './role.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from "../shared/shared.module";
+import { UpdateRole$Json$Params } from '../lib/generated/fn/update-role/update-role-json';
 
 @Component({
     selector: 'role',
@@ -13,6 +14,7 @@ import { SharedModule } from "../shared/shared.module";
 })
 export class RoleComponent implements OnInit {
 
+  @ViewChild('closeModal') closeModal!: ElementRef;
   roleList: RoleDto[] = [];
   role!: Role;
   errorMsg: string = '';
@@ -37,6 +39,20 @@ export class RoleComponent implements OnInit {
     });
   }
 
+  openModal(roleDetails: Role): void {
+    if (roleDetails.id) {
+      this.role = roleDetails;
+      this.roleformGroup.controls['roleName'].setValue(this.role.roleName);
+      this.shouldCreateNewRole = false;
+    } else {
+      this.shouldCreateNewRole = true;
+      this.role = {
+        id: '',
+        roleName: ''
+      }
+    }
+  }
+  
   getAllRoles(): void {
     this.isLoading = true;
     this.roleService.getAllRoleService.getRoles().subscribe({
@@ -55,17 +71,26 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  openModal(roleDetails: Role): void {
-    if (roleDetails.id) {
-      this.role = roleDetails;
-      this.roleformGroup.controls['roleName'].setValue(this.role.roleName);
-    } else {
-      this.shouldCreateNewRole = true;
-      this.role = {
-        id: '',
-        roleName: ''
+  updateRole(roleId: string): void {
+    const inputParam: UpdateRole$Json$Params = {
+      body: {
+        id: roleId,
+        roleName: this.roleformGroup.controls['roleName'].value
       }
     }
+    this.roleService.updateRoleService.updateRole$Json(inputParam).subscribe({
+      next: (response: RoleDto) => {
+        const existingRoleIndex = this.roleList.findIndex(role => role.id === response.id);
+        if (existingRoleIndex !== -1) {
+          this.roleList[existingRoleIndex].roleName = response.roleName;
+          this.showToaster = true;
+        }
+        this.closeModal.nativeElement.click();
+      },
+      error: (error: Error) => {
+        this.showToaster = true;
+        this.errorMsg = error.message;
+      }
+    });
   }
-
 }

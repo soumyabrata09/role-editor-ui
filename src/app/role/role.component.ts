@@ -4,6 +4,7 @@ import { RoleService } from './role.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from "../shared/shared.module";
 import { UpdateRole$Json$Params } from '../lib/generated/fn/update-role/update-role-json';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'role',
@@ -29,7 +30,8 @@ export class RoleComponent implements OnInit {
   isLoading: boolean = false;
 
   constructor(private roleService: RoleService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -50,13 +52,14 @@ export class RoleComponent implements OnInit {
     }, 2000);
   }
 
-  openModal(roleDetails: Role): void {
-    if (roleDetails.id) {
+  openModal(roleDetails?: Role): void {
+    if (roleDetails && roleDetails.id) {
       this.role = roleDetails;
       this.roleformGroup.controls['roleName'].setValue(this.role.roleName);
       this.shouldCreateNewRole = false;
     } else {
       this.shouldCreateNewRole = true;
+      this.roleformGroup.controls['roleName'].setValue('');
       this.role = {
         id: '',
         roleName: ''
@@ -70,14 +73,13 @@ export class RoleComponent implements OnInit {
       next: (response: Array<RoleDto>) => {
         setTimeout(() => {
           this.roleList = response;
-          this.showToaster = true;
           this.isLoading = false;
         }, 1000);
       },
       error: (error: Error) => {
         this.isLoading = false;
-        this.showToaster = true;
         this.errorMsg = error.message;
+        this.toastr.error(this.errorMsg, 'Unable to load role list');
       }
     });
   }
@@ -94,14 +96,20 @@ export class RoleComponent implements OnInit {
         const existingRoleIndex = this.roleList.findIndex(role => role.id === response.id);
         if (existingRoleIndex !== -1) {
           this.roleList[existingRoleIndex].roleName = response.roleName;
-          this.showToaster = true;
+          this.toastr.success(`Role: ${response.roleName} updated successfully`);
         }
-        this.closeModal.nativeElement.click();
+        this.closeModalDialog();
       },
       error: (error: Error) => {
         this.showToaster = true;
         this.errorMsg = error.message;
+        this.toastr.error(this.errorMsg, `Unable to update Role:\n ${this.roleformGroup.controls['roleName'].value}`);
+        this.closeModalDialog();
       }
     });
+  }
+
+  private closeModalDialog(): void {
+    this.closeModal.nativeElement.click();
   }
 }

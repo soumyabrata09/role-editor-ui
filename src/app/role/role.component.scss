@@ -31,9 +31,13 @@
     }
 }
 
-.custom-popover {
-    --bs-popover-max-width: 200px;
-    --bs-popover-border-color: var(--bd-violet-bg);
-    --bs-popover-body-padding-x: 1rem;
-    --bs-popover-body-padding-y: 0.5rem;
-  }
+.create-role {
+    margin: 15px;
+
+    &:hover {
+        font-weight: 600;
+        -moz-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        -webkit-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    }
+}

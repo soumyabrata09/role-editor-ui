@@ -2,26 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { Role, RoleDto } from '../lib/generated/models';
 import { RoleService } from './role.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from "../shared/shared.module";
 
 @Component({
-  selector: 'app-role',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './role.component.html',
-  styleUrl: './role.component.scss'
+    selector: 'role',
+    standalone: true,
+    templateUrl: './role.component.html',
+    styleUrl: './role.component.scss',
+    imports: [ReactiveFormsModule, SharedModule]
 })
 export class RoleComponent implements OnInit {
 
   roleList: RoleDto[] = [];
   role!: Role;
   errorMsg: string = '';
+  spinnerColor: string = "text-success";
   shouldCreateNewRole: boolean = false;
   showToaster: boolean = false;
   roleformGroup!: FormGroup;
+  isLoading: boolean = false;
 
   constructor(private roleService: RoleService,
-    private formBuilder: FormBuilder) { 
-    }
+    private formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
     this.createRoleForm();
@@ -35,11 +38,17 @@ export class RoleComponent implements OnInit {
   }
 
   getAllRoles(): void {
+    this.isLoading = true;
     this.roleService.getAllRoleService.getRoles().subscribe({
       next: (response: Array<RoleDto>) => {
-        this.roleList = response;
+        setTimeout(() => {
+          this.roleList = response;
+          this.showToaster = true;
+          this.isLoading = false;
+        }, 1000);
       },
       error: (error: Error) => {
+        this.isLoading = false;
         this.showToaster = true;
         this.errorMsg = error.message;
       }

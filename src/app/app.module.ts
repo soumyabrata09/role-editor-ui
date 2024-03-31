@@ -5,6 +5,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
+import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
     declarations: [
@@ -16,9 +17,14 @@ import { AppRoutingModule } from "./app-routing.module";
         AppRoutingModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule 
+        ReactiveFormsModule,
+        SharedModule 
     ],
-    exports: [ReactiveFormsModule, FormsModule],
+    exports: [
+        ReactiveFormsModule, 
+        FormsModule, 
+        SharedModule
+    ],
     providers: [],
     bootstrap: [AppComponent]
 })

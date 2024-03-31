@@ -1,3 +1,6 @@
+@if (isLoading) {
+<spinner [spinnerColorBootstrap]="spinnerColor"></spinner>
+} @else {
 <div class="table-responsive">
     <table class="table table-warning table-bordered border-warning table-hover table-striped">
         <caption hidden>This Table will list the available roles</caption>
@@ -14,8 +17,8 @@
                 <th scope="row">{{ role.id }}</th>
                 <td>{{ role.roleName }}</td>
                 <td>
-                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editRole"
-                     (click)="openModal(role)">Edit</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#editRole" (click)="openModal(role)">Edit</button>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline-danger btn-sm">Remove</button>
@@ -25,32 +28,34 @@
         </tbody>
     </table>
 </div>
+}
 
 <!--Modal-->
 <form [formGroup]="roleformGroup">
-    <div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="modalCenteredTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Role Name</span>
-                    </div>
-                    <input type="text" class="form-control" formControlName="roleName">
+    <div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="modalCenteredTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline-success" value="add-create role">Create User</button>
-                <button type="button" class="btn btn-outline-warning" value="edit role">Modify User</button>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Role Name</span>
+                        </div>
+                        <input type="text" class="form-control" formControlName="roleName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-success" value="add-create role">Create User</button>
+                    <button type="button" class="btn btn-outline-warning" value="edit role">Modify User</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </form>
 
 @if (showToaster) {

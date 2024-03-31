@@ -10,13 +10,17 @@ import { UpdateRole$Json$Params } from '../lib/generated/fn/update-role/update-r
     standalone: true,
     templateUrl: './role.component.html',
     styleUrl: './role.component.scss',
-    imports: [ReactiveFormsModule, SharedModule]
+    imports: [ 
+      ReactiveFormsModule, 
+      SharedModule
+    ]
 })
 export class RoleComponent implements OnInit {
 
   @ViewChild('closeModal') closeModal!: ElementRef;
   roleList: RoleDto[] = [];
   role!: Role;
+  unmaskedId: string | null = null;
   errorMsg: string = '';
   spinnerColor: string = "text-success";
   shouldCreateNewRole: boolean = false;
@@ -37,6 +41,13 @@ export class RoleComponent implements OnInit {
     this.roleformGroup = this.formBuilder.group({
       roleName: ['']
     });
+  }
+
+  unmaskId(id: string): void {
+    this.unmaskedId = id;
+    setTimeout(() => {
+      this.unmaskedId = null;
+    }, 2000);
   }
 
   openModal(roleDetails: Role): void {

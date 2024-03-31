@@ -1,3 +1,39 @@
 .table td {
     text-align: center;
+
+    &:hover {
+        -moz-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        -webkit-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    }
 }
+
+.table th {
+
+    &:hover {
+        -moz-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        -webkit-box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+        box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    }
+}
+
+.row__data {
+    color: grey;
+
+    &-unmask--color {
+        color: mediumpurple;
+    }
+
+    &:hover {
+        color: cornflowerblue;
+        font-weight: 600;
+        cursor: pointer;
+    }
+}
+
+.custom-popover {
+    --bs-popover-max-width: 200px;
+    --bs-popover-border-color: var(--bd-violet-bg);
+    --bs-popover-body-padding-x: 1rem;
+    --bs-popover-body-padding-y: 0.5rem;
+  }

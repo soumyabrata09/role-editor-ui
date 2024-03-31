@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Role, RoleDto } from '../lib/generated/models';
 import { RoleService } from './role.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-role',
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './role.component.html',
   styleUrl: './role.component.scss'
 })
@@ -15,18 +17,20 @@ export class RoleComponent implements OnInit {
   errorMsg: string = '';
   shouldCreateNewRole: boolean = false;
   showToaster: boolean = false;
-  formGroup!: FormGroup;
+  roleformGroup!: FormGroup;
 
   constructor(private roleService: RoleService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder) { 
+      this.createRoleForm();
+    }
 
   ngOnInit(): void {
-    this.createRoleForm();
+    // this.createRoleForm();
     this.getAllRoles();
   }
 
   createRoleForm(): void {
-    this.formGroup = this.formBuilder.group({
+    this.roleformGroup = this.formBuilder.group({
       roleName: ['']
     });
   }

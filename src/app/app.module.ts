@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { AppComponent } from "./app.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -7,17 +7,18 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 
 @NgModule({
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     declarations: [
         AppComponent
     ],
     imports: [
+        CommonModule,
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        // FormsModule,
+        FormsModule,
         ReactiveFormsModule 
     ],
+    exports: [ReactiveFormsModule, FormsModule],
     providers: [],
     bootstrap: [AppComponent]
 })

@@ -1,28 +1,30 @@
-<table class="table table-warning table-bordered border-warning table-hover table-striped">
-    <caption hidden>This Table will list the available roles</caption>
-    <thead class="table-info">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Role Name</th>
-            <th scope="col" colspan="2">Action</th>
-        </tr>
-    </thead>
-    <tbody class="table-group-divider">
-        @for (role of roleList; track $index) {
-        <tr>
-            <th scope="row">{{ role.id }}</th>
-            <td>{{ role.roleName }}</td>
-            <td>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editRole"
-                 (click)="openModal(role)">Edit</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-outline-danger btn-sm">Remove</button>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-warning table-bordered border-warning table-hover table-striped">
+        <caption hidden>This Table will list the available roles</caption>
+        <thead class="table-info">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Role Name</th>
+                <th scope="col" colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @for (role of roleList; track $index) {
+            <tr>
+                <th scope="row">{{ role.id }}</th>
+                <td>{{ role.roleName }}</td>
+                <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editRole"
+                     (click)="openModal(role)">Edit</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm">Remove</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <!--Modal-->
 <form [formGroup]="roleformGroup">
@@ -38,7 +40,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Role Name</span>
                     </div>
-                    <input type="text" class="form-control" formControlName="role.roleName">
+                    <input type="text" class="form-control" formControlName="roleName">
                 </div>
             </div>
             <div class="modal-footer">

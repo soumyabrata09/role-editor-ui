@@ -21,11 +21,10 @@ export class RoleComponent implements OnInit {
 
   constructor(private roleService: RoleService,
     private formBuilder: FormBuilder) { 
-      this.createRoleForm();
     }
 
   ngOnInit(): void {
-    // this.createRoleForm();
+    this.createRoleForm();
     this.getAllRoles();
   }
 
@@ -50,6 +49,7 @@ export class RoleComponent implements OnInit {
   openModal(roleDetails: Role): void {
     if (roleDetails.id) {
       this.role = roleDetails;
+      this.roleformGroup.controls['roleName'].setValue(this.role.roleName);
     } else {
       this.shouldCreateNewRole = true;
       this.role = {

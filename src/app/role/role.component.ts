@@ -137,21 +137,19 @@ export class RoleComponent implements OnInit {
   }
 
   deleteRole(roleId: string): void {
-    // if (confirm("Are you sure you want to delete this role !!!")) {
-      const input: DeleteRole$Params = {
-        roleId: roleId
-      };
-      this.roleService.deleteRoleService.deleteRole(input).subscribe({
-        next: () => {
-          this.roleList = this.roleList.filter(role => role.id !== roleId); // This will remove the data from the array
-          this.toastr.success(`Role: associated with id: ${input} has been deleted successfully`);
-        },
-        error: (error: Error) => {
-          const detailedMsg: string = `Unable to delete Role as per id: ${input} given\n Please check the id`;
-          ErrorHandler.handleError(error, detailedMsg, this.toastr);
-        }
-      });
-    // }
+    const input: DeleteRole$Params = {
+      roleId: roleId
+    };
+    this.roleService.deleteRoleService.deleteRole(input).subscribe({
+      next: () => {
+        this.roleList = this.roleList.filter(role => role.id !== roleId); // This will remove the data from the array
+        this.toastr.success(`Role: associated with id: ${input} has been deleted successfully`);
+      },
+      error: (error: Error) => {
+        const detailedMsg: string = `Unable to delete Role as per id: ${input} given\n Please check the id`;
+        ErrorHandler.handleError(error, detailedMsg, this.toastr);
+      }
+    });
   }
 
   private closeModalDialog(): void {

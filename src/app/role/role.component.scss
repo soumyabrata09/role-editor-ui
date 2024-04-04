@@ -41,3 +41,17 @@
         box-shadow: 0 4px 2px -3px rgba(0, 0, 0, 0.5) inset;
     }
 }
+
+.invalid_input {
+    border: 1px solid red;
+
+    &--text-decor {
+        color: red;
+        padding-left: 2px;
+    }
+}
+
+.data-removal-warning {
+    font-weight: 600;
+    color: red;
+}

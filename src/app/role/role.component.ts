@@ -1,20 +1,23 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Role, RoleDto } from '../lib/generated/models';
 import { RoleService } from './role.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SharedModule } from "../shared/shared.module";
 import { UpdateRole$Json$Params } from '../lib/generated/fn/update-role/update-role-json';
 import { ToastrService } from 'ngx-toastr';
+import { CreateRole$Json$Params } from '../lib/generated/fn/create-role/create-role-json';
+import { ErrorHandler } from '../shared/helpers/error-handler';
+import { DeleteRole$Params } from '../lib/generated/fn/delete-role/delete-role';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'role',
-    standalone: true,
-    templateUrl: './role.component.html',
-    styleUrl: './role.component.scss',
-    imports: [ 
-      ReactiveFormsModule, 
-      SharedModule
-    ]
+  selector: 'role',
+  standalone: true,
+  templateUrl: './role.component.html',
+  styleUrl: './role.component.scss',
+  imports: [
+    ReactiveFormsModule, SharedModule, CommonModule
+  ]
 })
 export class RoleComponent implements OnInit {
 
@@ -22,12 +25,11 @@ export class RoleComponent implements OnInit {
   roleList: RoleDto[] = [];
   role!: Role;
   unmaskedId: string | null = null;
-  errorMsg: string = '';
   spinnerColor: string = "text-success";
   shouldCreateNewRole: boolean = false;
-  showToaster: boolean = false;
   roleformGroup!: FormGroup;
   isLoading: boolean = false;
+  isCreateButtonDisabled: boolean = false;
 
   constructor(private roleService: RoleService,
     private formBuilder: FormBuilder,
@@ -41,7 +43,7 @@ export class RoleComponent implements OnInit {
 
   createRoleForm(): void {
     this.roleformGroup = this.formBuilder.group({
-      roleName: ['']
+      roleName: ['', Validators.required]
     });
   }
 
@@ -59,14 +61,17 @@ export class RoleComponent implements OnInit {
       this.shouldCreateNewRole = false;
     } else {
       this.shouldCreateNewRole = true;
-      this.roleformGroup.controls['roleName'].setValue('');
-      this.role = {
-        id: '',
-        roleName: ''
-      }
+      this.roleformGroup.reset();
+      this.isCreateButtonDisabled = true;
     }
   }
-  
+
+  openDeletionModal(roleDetails: Role): void {
+    if (roleDetails.id) {
+      this.role = roleDetails;
+    }
+  }
+
   getAllRoles(): void {
     this.isLoading = true;
     this.roleService.getAllRoleService.getRoles().subscribe({
@@ -78,20 +83,43 @@ export class RoleComponent implements OnInit {
       },
       error: (error: Error) => {
         this.isLoading = false;
-        this.errorMsg = error.message;
-        this.toastr.error(this.errorMsg, 'Unable to load role list');
+        const detailedMsg: string = 'Unable to load role list';
+        ErrorHandler.handleError(error, detailedMsg, this.toastr);
+      }
+    });
+  }
+
+  createRole(): void {
+    const inputRequest: CreateRole$Json$Params = {
+      body: {
+        roleName: this.roleformGroup.controls['roleName'].value
+      }
+    };
+    this.roleService.createRoleService.createRole$Json(inputRequest).subscribe({
+      next: (response: RoleDto) => {
+        if (response.id) {
+          this.roleList.push(response);
+          this.toastr.success(`Role: ${response.roleName} created successfully`);
+        }
+        this.closeModalDialog();
+
+      },
+      error: (error: Error) => {
+        const detailedMsg: string = `Unable to create Role:\n ${this.roleformGroup.controls['roleName'].value}`;
+        ErrorHandler.handleError(error, detailedMsg, this.toastr);
+        this.closeModalDialog();
       }
     });
   }
 
   updateRole(roleId: string): void {
-    const inputParam: UpdateRole$Json$Params = {
+    const inputRequest: UpdateRole$Json$Params = {
       body: {
         id: roleId,
         roleName: this.roleformGroup.controls['roleName'].value
       }
     }
-    this.roleService.updateRoleService.updateRole$Json(inputParam).subscribe({
+    this.roleService.updateRoleService.updateRole$Json(inputRequest).subscribe({
       next: (response: RoleDto) => {
         const existingRoleIndex = this.roleList.findIndex(role => role.id === response.id);
         if (existingRoleIndex !== -1) {
@@ -101,12 +129,29 @@ export class RoleComponent implements OnInit {
         this.closeModalDialog();
       },
       error: (error: Error) => {
-        this.showToaster = true;
-        this.errorMsg = error.message;
-        this.toastr.error(this.errorMsg, `Unable to update Role:\n ${this.roleformGroup.controls['roleName'].value}`);
+        const detailedMsg: string = `Unable to update Role:\n ${this.roleformGroup.controls['roleName'].value}`;
+        ErrorHandler.handleError(error, detailedMsg, this.toastr);
         this.closeModalDialog();
       }
     });
+  }
+
+  deleteRole(roleId: string): void {
+    // if (confirm("Are you sure you want to delete this role !!!")) {
+      const input: DeleteRole$Params = {
+        roleId: roleId
+      };
+      this.roleService.deleteRoleService.deleteRole(input).subscribe({
+        next: () => {
+          this.roleList = this.roleList.filter(role => role.id !== roleId); // This will remove the data from the array
+          this.toastr.success(`Role: associated with id: ${input} has been deleted successfully`);
+        },
+        error: (error: Error) => {
+          const detailedMsg: string = `Unable to delete Role as per id: ${input} given\n Please check the id`;
+          ErrorHandler.handleError(error, detailedMsg, this.toastr);
+        }
+      });
+    // }
   }
 
   private closeModalDialog(): void {

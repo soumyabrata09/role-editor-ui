@@ -282,9 +282,6 @@ components:
         Role:
           $ref: "#/components/schemas/RoleDto"
     Role:
-      required:
-        - id
-        - Role identifier
       type: object
       properties:
         id:

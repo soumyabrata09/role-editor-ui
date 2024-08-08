@@ -1,1 +1,54 @@
-<p>user works!</p>
+@if (isLoading) {
+<spinner [spinnerColorBootstrap]="spinnerColor"></spinner>
+} @else {
+<button type="button" 
+    class="create-user btn btn-success btn-sm" 
+    data-bs-toggle="modal" 
+    data-bs-target="#editUser"
+    (click)="openModal()">Create New User
+</button>
+
+<div class="table-responsive">
+    @if (userList.length) {
+    <table class="table table-light table-bordered border-light table-hover table-striped">
+        <caption hidden>This Table will list the available users</caption>
+        <thead class="table-info">
+            <th scope="col">First Name</th>
+            <th scope="col">LastName</th>
+            <th scope="col">Role Name</th>
+            <th scope="col" colspan="2">Action</th>
+        </thead>
+        <tbody class="table-group-divider">
+            @for (user of userList; track $index) {
+            <tr>
+                <th class="row__data" scope="row">{{ user.id }}</th>
+                <th class="row__data" scope="row">{{ user.firstName }}</th>
+                <th class="row__data" scope="row">{{ user.lastName }}</th>
+                <th class="row__data" scope="row">{{ user.Role?.roleName }}</th>
+                <td>
+                    <button type="button" 
+                        class="btn btn-outline-primary btn-sm" 
+                        data-bs-toggle="modal"
+                        data-bs-target="#editRole" 
+                        (click)="openModal(user)">Edit
+                    </button>
+                </td>
+                <td>
+                    <button type="button" 
+                        class="btn btn-outline-danger btn-sm" 
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteRole" 
+                        (click)="openDeletionModal(user)">Remove
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    } @else {
+    <div class="alert alert-danger align-items-center" style="padding-left: 2rem;" role="alert">
+        Service Down, sorry for inconvenience
+    </div>
+    }
+</div>
+}

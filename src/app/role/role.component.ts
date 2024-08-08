@@ -25,7 +25,7 @@ export class RoleComponent implements OnInit {
   roleList: RoleDto[] = [];
   role!: Role;
   unmaskedId: string | null = null;
-  spinnerColor: string = "text-success";
+  spinnerColor: string = 'text-success';
   shouldCreateNewRole: boolean = false;
   roleformGroup!: FormGroup;
   isLoading: boolean = false;
@@ -55,7 +55,7 @@ export class RoleComponent implements OnInit {
   }
 
   openModal(roleDetails?: Role): void {
-    if (roleDetails && roleDetails.id) {
+    if (roleDetails?.id) {
       this.role = roleDetails;
       this.roleformGroup.controls['roleName'].setValue(this.role.roleName);
       this.shouldCreateNewRole = false;

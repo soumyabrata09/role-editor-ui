@@ -17,11 +17,13 @@
         <tbody class="table-group-divider">
             @for (role of roleList; track $index) {
             <tr>
-                @if (unmaskedId && unmaskedId === role.id) {
-                <th class="row__data-unmask--color " scope="row"> {{ unmaskedId }}</th>
+                @if (roleService.unmaskedRoleId && roleService.unmaskedRoleId === role.id) {
+                    <th class="row__data-unmask--color " scope="row"> {{ roleService.unmaskedRoleId }}</th>
                 } @else {
-                <th class="row__data" scope="row" ngxClipboard [cbContent]="role.id"
-                 (click)="unmaskId(role.id)">{{ role.id | maskId }}</th>
+                    <th class="row__data" scope="row" ngxClipboard [cbContent]="role.id"
+                        (click)="roleService.unmaskRoleId(role.id)" 
+                        (keydown.enter)="roleService.unmaskRoleId(role.id)">{{ role.id | maskId }}
+                    </th>
                 }
                 <td class="row__data">{{ role.roleName }}</td>
                 <td>
@@ -51,8 +53,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modal-title">Role</h5>
-                    <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">

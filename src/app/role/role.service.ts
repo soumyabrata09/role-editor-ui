@@ -6,9 +6,20 @@ import { CreateRoleService, DeleteRoleService, GetAllRolesService, GetRoleByIdSe
 })
 export class RoleService {
 
+  unmaskedRoleId: string | null = null;
+  
   constructor(readonly createRoleService: CreateRoleService,
     readonly getAllRoleService: GetAllRolesService,
     readonly updateRoleService: UpdateRoleService,
     readonly getRoleByIdService: GetRoleByIdService,
-    readonly deleteRoleService: DeleteRoleService) { }
+    readonly deleteRoleService: DeleteRoleService
+  ) { }
+
+  unmaskRoleId(selectedRoleId: string): void {
+    this.unmaskedRoleId = selectedRoleId;
+    setTimeout(() => {
+      this.unmaskedRoleId = null;
+    }, 2000);
+  }
+
 }

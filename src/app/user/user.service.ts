@@ -6,9 +6,19 @@ import { CreateUserService, DeleteUserService, GetAllUserService, UpdateUserServ
 })
 export class UserService {
 
+  unmaskedUserId: string | null = null;
+
   constructor(readonly createUserService: CreateUserService,
     readonly getAllUserService: GetAllUserService,
     readonly updateUserService: UpdateUserService,
     readonly deleteUserService: DeleteUserService
   ) { }
+
+  unmaskUserId(selectedUserId: string): void {
+    this.unmaskedUserId = selectedUserId;
+    setTimeout(() => {
+      this.unmaskedUserId = null;
+    }, 2000);
+  }
+
 }

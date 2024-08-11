@@ -4,7 +4,7 @@
 <button type="button" 
     class="create-user btn btn-success btn-sm" 
     data-bs-toggle="modal" 
-    data-bs-target="#editUser"
+    data-bs-target="#editOrCreateUser"
     (click)="openModal()">Create New User
 </button>
 
@@ -12,19 +12,31 @@
     @if (userList.length) {
     <table class="table table-light table-bordered border-light table-hover table-striped">
         <caption hidden>This Table will list the available users</caption>
-        <thead class="table-info">
-            <th scope="col">First Name</th>
-            <th scope="col">LastName</th>
-            <th scope="col">Role Name</th>
-            <th scope="col" colspan="2">Action</th>
+        <thead class="table-success">
+            <tr>
+                <th scope="col">User Id</th>
+                <th scope="col">First Name</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Role Name</th>
+                <th scope="col" colspan="2">Action</th>
+            </tr>
         </thead>
         <tbody class="table-group-divider">
             @for (user of userList; track $index) {
             <tr>
-                <th class="row__data" scope="row">{{ user.id }}</th>
-                <th class="row__data" scope="row">{{ user.firstName }}</th>
-                <th class="row__data" scope="row">{{ user.lastName }}</th>
-                <th class="row__data" scope="row">{{ user.Role?.roleName }}</th>
+                <!-- mask-unmask of the userId -->
+                @if (userService.unmaskedUserId && userService.unmaskedUserId === user.id) {
+                    <th class="row__data-unmask--color " scope="row"> {{ userService.unmaskedUserId }}</th>
+                } @else {
+                    <th class="row__data" 
+                        scope="row" ngxClipboard [cbContent]="user.id"
+                        (click)="userService.unmaskUserId(user.id!)" 
+                        (keydown.enter)="userService.unmaskUserId(user.id!)">{{ user.id! | maskId }}
+                    </th>
+                }
+                <td class="row__data">{{ user.firstName }}</td>
+                <td class="row__data">{{ user.lastName }}</td>
+                <td class="row__data">{{ user.Role?.roleName }}</td>
                 <td>
                     <button type="button" 
                         class="btn btn-outline-primary btn-sm" 
@@ -52,3 +64,80 @@
     }
 </div>
 }
+
+<!-- Modal -->
+ <form [formGroup]="userFormGroup">
+    <div class="modal fade" 
+        id="editOrCreateUser" 
+        tabindex="-1" 
+        role="dialog"
+        aria-labelledby="modalCenteredTitle"
+        aria-hidden="true">
+        <div role="document" class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">User</h5>
+                    <button #closeUserModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if (isRolesDataLoading) {
+                        <spinner />
+                    } @else {
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Enter Full Name</span>
+                            </div>
+                            <input type="text" class="form-control"
+                                [ngClass]="{ 'invalid_input': (userFormGroup.controls['firstName'].touched || userFormGroup.controls['firstName'].dirty) && userFormGroup.controls['firstName'].invalid }"
+                                formControlName="firstName" id="floatingInputFirstName" placeholder="First Name" />
+                            <input type="text" class="form-control"
+                                [ngClass]="{ 'invalid_input': (userFormGroup.controls['lastName'].touched || userFormGroup.controls['lastName'].dirty) && userFormGroup.controls['lastName'].invalid }"
+                                formControlName="lastName" id="floatingInputLastName" placeholder="Last Name" /><br />
+                        </div><br />
+                        <div>
+                            @if ((userFormGroup.controls['firstName'].touched || userFormGroup.controls['firstName'].dirty)
+                             && userFormGroup.controls['firstName'].invalid) {
+                            <div>
+                                <span class="invalid_input--text-decor">First Name must be entered</span>
+                            </div>
+                            }
+                            @if ((userFormGroup.controls['lastName'].touched || userFormGroup.controls['lastName'].dirty)
+                             && userFormGroup.controls['lastName'].invalid) {
+                            <div>
+                                <span class="invalid_input--text-decor">Last Name must be entered</span>
+                            </div>
+                            }
+                        </div><br />
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Roles</label>
+                            </div>
+                            <select class="custom-select" id="inputGroupSelect01"
+                                [ngClass]="{ 'invalid_input': (userFormGroup.controls['roleName'].touched || userFormGroup.controls['roleName'].dirty) && userFormGroup.controls['roleName'].invalid }" 
+                                formControlName="roleName">
+                                <option [value]="" disabled selected>Choose role...</option>
+                                @for (role of roleList; track $index) {
+                                    <option [value]="role.id">{{ role.roleName }}</option>
+                                }
+                            </select>
+                            @if ((userFormGroup.controls['roleName'].touched || userFormGroup.controls['roleName'].dirty)
+                             && userFormGroup.controls['roleName'].invalid) {
+                            <div>
+                                <span class="invalid_input--text-decor">Role Name must be entered</span>
+                            </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" 
+                        class="btn btn-outline-success" 
+                        formControlName="roleName"
+                        (click)="createUser()">Create User
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+ </form>

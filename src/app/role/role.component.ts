@@ -24,14 +24,13 @@ export class RoleComponent implements OnInit {
   @ViewChild('closeModal') closeModal!: ElementRef;
   roleList: RoleDto[] = [];
   role!: Role;
-  unmaskedId: string | null = null;
   spinnerColor: string = 'text-success';
   shouldCreateNewRole: boolean = false;
   roleformGroup!: FormGroup;
   isLoading: boolean = false;
   isCreateButtonDisabled: boolean = false;
 
-  constructor(private roleService: RoleService,
+  constructor(readonly roleService: RoleService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService) {
   }
@@ -45,13 +44,6 @@ export class RoleComponent implements OnInit {
     this.roleformGroup = this.formBuilder.group({
       roleName: ['', Validators.required]
     });
-  }
-
-  unmaskId(id: string): void {
-    this.unmaskedId = id;
-    setTimeout(() => {
-      this.unmaskedId = null;
-    }, 2000);
   }
 
   openModal(roleDetails?: Role): void {
@@ -102,7 +94,6 @@ export class RoleComponent implements OnInit {
           this.toastr.success(`Role: ${response.roleName} created successfully`);
         }
         this.closeModalDialog();
-
       },
       error: (error: Error) => {
         const detailedMsg: string = `Unable to create Role:\n ${this.roleformGroup.controls['roleName'].value}`;

@@ -34,3 +34,17 @@ $box-shadow-color: #00000080;
         cursor: pointer;
     }
 }
+
+.invalid_input {
+    border: 1px solid red;
+
+    &--text-decor {
+        color: red;
+        padding-left: 2px;
+    }
+}
+
+.data-removal-warning {
+    font-weight: 600;
+    color: red;
+}

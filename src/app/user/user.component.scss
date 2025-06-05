@@ -1,0 +1,12 @@
+$box-shadow-color: rgba(0, 0, 0, 0.5);
+
+.create-user {
+    margin: 15px;
+
+    &:hover {
+        font-weight: 600;
+        -moz-box-shadow: 0 4px 2px -3px $box-shadow-color inset;
+        -webkit-box-shadow: 0 4px 2px -3px $box-shadow-color inset;
+        box-shadow: 0 4px 2px -3px $box-shadow-color inset;
+    }
+}

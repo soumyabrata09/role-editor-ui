@@ -1,0 +1,104 @@
+@if (isLoading) {
+<spinner [spinnerColorBootstrap]="spinnerColor"></spinner>
+} @else {
+<button type="button" class="create-role btn btn-success btn-sm" data-bs-toggle="modal"
+ data-bs-target="#editRole" (click)="openModal()">Create Role</button>
+<div class="table-responsive">
+    @if (roleList.length !== 0) {
+    <table class="table table-light table-bordered border-light table-hover table-striped">
+        <caption hidden>This Table will list the available roles</caption>
+        <thead class="table-info">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Role Name</th>
+                <th scope="col" colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @for (role of roleList; track $index) {
+            <tr>
+                @if (roleService.unmaskedRoleId && roleService.unmaskedRoleId === role.id) {
+                    <th class="row__data-unmask--color " scope="row"> {{ roleService.unmaskedRoleId }}</th>
+                } @else {
+                    <th class="row__data" scope="row" ngxClipboard [cbContent]="role.id"
+                        (click)="roleService.unmaskRoleId(role.id)" 
+                        (keydown.enter)="roleService.unmaskRoleId(role.id)">{{ role.id | maskId }}
+                    </th>
+                }
+                <td class="row__data">{{ role.roleName }}</td>
+                <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#editRole" (click)="openModal(role)">Edit</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                     data-bs-target="#deleteRole" (click)="openDeletionModal(role)">Remove</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    } @else {
+    <div class="alert alert-danger align-items-center" style="padding-left: 2rem;" role="alert">
+        Service Down, sorry for inconvenience
+    </div>
+    }
+</div>
+}
+
+<!--Modal-->
+<form [formGroup]="roleformGroup">
+    <div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="modalCenteredTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Role</h5>
+                    <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Role Name</span>
+                        </div>
+                        <input type="text" class="form-control" formControlName="roleName" id="floatingInputRoleName" placeholder="Enter Role Name"
+                         [ngClass]="{ 'invalid_input' : (roleformGroup.controls['roleName'].touched || roleformGroup.controls['roleName'].dirty) && roleformGroup.controls['roleName'].invalid }">
+                    </div>
+                    @if ((roleformGroup.controls['roleName'].touched || roleformGroup.controls['roleName'].dirty) && roleformGroup.controls['roleName'].invalid) {
+                        <div>
+                            <span class="invalid_input--text-decor">Role Name must be entered</span>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    @if (shouldCreateNewRole) {
+                    <button type="button" class="btn btn-outline-success" formControlName="roleName"
+                     (click)="createRole()">Create User</button>
+                    } @else {
+                    <button type="button" class="btn btn-outline-warning" formControlName="roleName"
+                        (click)="updateRole(role.id!)">Modify User</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--Role Deletion Modal-->
+<div class="modal fade" id="deleteRole" tabindex="-1" aria-labelledby="modalCenteredTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 data-removal-warning" id="modal-deletion-title">Role Deletion</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p class="data-removal-warning">Are you sure you want to delete this Role!!!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" (click)="deleteRole(role.id!)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
